@@ -167,3 +167,6 @@ LOGGING = {
         },
     }
 }
+
+STRIPE_SECRET = 'sk_test_xDQ49p70EbfvCnYcr5aOooA8'
+STRIPE_PUBLISHABLE = 'pk_test_34X3ZGwXJHgSEVAA9noKyR19'

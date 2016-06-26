@@ -7,8 +7,8 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
 SITE_ROOT = os.path.dirname(PROJECT_ROOT)
-STRIPE_SECRET = 'sk_test_xDQ49p70EbfvCnYcr5aOooA8'
-STRIPE_PUBLISHABLE = 'pk_test_34X3ZGwXJHgSEVAA9noKyR19'
+STRIPE_SECRET = ''
+STRIPE_PUBLISHABLE = ''
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import SignInForm, CardForm, UserForm
 from models import User
-from django_ecomm.settings import settings
+import django_ecomm.settings as settings
 import stripe
 import datetime
 
@@ -55,7 +55,7 @@ def sign_out(request):
 def register(request):
     user = None
     if request.method == 'POST':
-        form = SignInForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
 
             # Subscription billing method
@@ -106,7 +106,7 @@ def register(request):
             'user': user,
             'years': range(2011, 2036),
         },
-        context_istance=RequestContext(request)
+        context_instance=RequestContext(request)
     )
 
 

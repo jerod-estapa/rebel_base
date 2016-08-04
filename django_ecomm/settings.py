@@ -1,6 +1,7 @@
 # Django settings for django_ecomm project.
 
 import os
+import sys
 
 
 DEBUG = True
@@ -170,3 +171,6 @@ LOGGING = {
     }
 }
 
+# Covers regular testing and django-coverage
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'

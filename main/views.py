@@ -9,5 +9,5 @@ def index(request):
     else:
         return render_to_response(
             'user.html',
-            {'user': User.objects.get(pk=uid)}
+            {'user': User.get_by_id(uid)}
         )

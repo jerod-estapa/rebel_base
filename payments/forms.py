@@ -45,5 +45,5 @@ class UserForm(CardForm):
         password = cleaned_data.get('password')
         ver_password = cleaned_data.get('ver_password')
         if password != ver_password:
-            raise forms.ValidationError('Passwords do not match')
+            raise forms.ValidationError('Passwords do not match.')
         return cleaned_data

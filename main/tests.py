@@ -10,7 +10,6 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.shortcuts import render_to_response
 from .views import index
-from payments.models import User
 from django.test import RequestFactory
 
 
@@ -72,5 +71,5 @@ class MainPageTests(TestCase):
             self.request.session = {}
 
             # verifies it returns the page for the logged in user
-            expectedHtml = render_to_response('user.html', {'user': user_mock.get_by_id(1)})
-            self.assertEquals(resp.content, expectedHtml.content)
+            expected_html = render_to_response('user.html', {'user': user_mock.get_by_id(1)})
+            self.assertEquals(resp.content, expected_html.content)

@@ -6,8 +6,23 @@ Replace this with more appropriate tests for your application.
 """
 
 from payments.forms import SignInForm
-import unittest
+from django.test import TestCase
+from payments.models import User
 from pprint import pformat
+
+
+class UserModelTest(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_user = User(email="j@j.com", name='test_user')
+        cls.test_user.save()
+
+    def test_user_to_string_print_email(self):
+        self.assertEquals(str(self.test_user), "j@j.com")
+
+    def test_get_by_id(self):
+        self.assertEquals(User.get_by_id(1), self.test_user)
 
 
 class FormTesterMixin():
@@ -28,7 +43,7 @@ class FormTesterMixin():
         )
 
 
-class FormTests(unittest.TestCase, FormTesterMixin):
+class FormTests(TestCase, FormTesterMixin):
 
     def test_signin_form_data_validation_for_invalid_data(self):
         invalid_data_list = [
@@ -39,7 +54,7 @@ class FormTests(unittest.TestCase, FormTesterMixin):
         ]
 
         for invalid_data in invalid_data_list:
-            self.assertFormError(SignInForm,
+            self.assert_form_error(SignInForm,
                                  invalid_data['error'][0],
                                  invalid_data['error'][1],
-                                 invalid_data['data'])
+                                 invalid_data["data"])

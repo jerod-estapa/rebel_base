@@ -1,14 +1,15 @@
 """
 This file demonstrates writing tests using the unittest module. These will pass
 when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
 """
 
 from payments.forms import SignInForm, UserForm
 from django import forms
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.core.urlresolvers import resolve
+from django.shortcuts import render_to_response
 from payments.models import User
+from .views import sign_in, sign_out
 from pprint import pformat
 
 
@@ -24,6 +25,50 @@ class UserModelTest(TestCase):
 
     def test_get_by_id(self):
         self.assertEquals(User.get_by_id(1), self.test_user)
+
+
+class ViewTesterMixin(object):
+
+    @classmethod
+    def setupViewTester(cls, url, view_func, expected_html, status_code=200, session={}):
+        request_factory = RequestFactory()
+        cls.request = request_factory.get(url)
+        cls.request.session = session
+        cls.status_code = status_code
+        cls.url = url
+        cls.view_func = staticmethod(view_func)
+        cls.expected_html = expected_html
+
+    def test_resolves_to_correct_view(self):
+        test_view = resolve(self.url)
+        self.assertEquals(test_view.func, self.view_func)
+
+    def test_returns_appropriate_response_code(self):
+        resp = self.view_func(self.request)
+        self.assertEquals(resp.status_code, self.status_code)
+
+    def test_returns_correct_html(self):
+        resp = self.view_func(self.request)
+        self.assertEquals(resp.content, self.expected_html)
+
+
+class SignInPageTests(TestCase, ViewTesterMixin):
+
+    @classmethod
+    def setUpClass(cls):
+        html = render_to_response(
+            'sign_in.html',
+            {
+                'form': SignInForm(),
+                'user': None
+            }
+        )
+
+        ViewTesterMixin.setupViewTester(
+            '/sign_in',
+            sign_in,
+            html.content
+        )
 
 
 class FormTesterMixin():

@@ -71,6 +71,24 @@ class SignInPageTests(TestCase, ViewTesterMixin):
         )
 
 
+class SignOutPageTests(TestCase, ViewTesterMixin):
+
+    @classmethod
+    def setUpClass(cls):
+        ViewTesterMixin.setupViewTester(
+            'sign_out',
+            sign_out,
+            "",  # a redirect will return no html
+            status_code=302,
+            session={"user": "dummy"},
+
+        )
+
+    def setUp(self):
+        #  sign_out clears the session, so this resets it
+        self.request.session = {"user": "dummy"}
+
+
 class FormTesterMixin():
 
     def assert_form_error(self, form_cls, expected_error_name, expected_error_msg, data):

@@ -3,7 +3,7 @@ This file demonstrates writing tests using the unittest module. These will pass
 when you run "manage.py test".
 """
 
-from payments.forms import SignInForm, UserForm
+from payments.forms import SignInForm, UserForm, CardForm
 from django import forms
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import resolve
@@ -158,3 +158,29 @@ class FormTests(TestCase, FormTesterMixin):
 
         self.assertRaisesMessage(forms.ValidationError, "Passwords do not match.",
                                  form.clean)
+
+    def test_card_form_data_validation_for_invalid_data(self):
+        invalid_data_list = [
+            {
+                'data': {'last_4_digits': '123'},
+                'error': (
+                    'last_4_digits',
+                    [u'Ensure this value has at least 4 characters (it has 3).']
+                )
+            },
+            {
+                'data': {'last_4_digits': '12345'},
+                'error': (
+                    'last_4_digits',
+                    [u'Ensure this value has at most 4 characters (it has 5).']
+                )
+            }
+        ]
+
+        for invalid_data in invalid_data_list:
+            self.assertFormError(
+                CardForm,
+                invalid_data['error'][0],
+                invalid_data['error'][1],
+                invalid_data["data"]
+            )

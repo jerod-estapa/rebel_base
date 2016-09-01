@@ -8,8 +8,9 @@ from django import forms
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import resolve
 from django.shortcuts import render_to_response
+import django_ecomm.settings as settings
 from payments.models import User
-from .views import sign_in, sign_out
+from .views import sign_in, sign_out, soon, register
 from pprint import pformat
 
 
@@ -184,3 +185,28 @@ class FormTests(TestCase, FormTesterMixin):
                 invalid_data['error'][1],
                 invalid_data["data"]
             )
+
+class RegisterPageTests(TestCase, ViewTesterMixin):
+
+    @classmethod
+    def setUpClass(cls):
+        html = render_to_response(
+            'register.html',
+            {
+                'form': UserForm(),
+                'months': range(1, 12),
+                'publishable': settings.STRIPE_PUBLISHABLE,
+                'soon': soon(),
+                'user': None,
+                'years': range(2011, 2036),
+            }
+        )
+        ViewTesterMixin.setupViewTester(
+            '/register',
+            register,
+            html.content,
+        )
+
+    def setUp(self):
+        request_factory = RequestFactory()
+        self.request = request_factory.get(self.url)

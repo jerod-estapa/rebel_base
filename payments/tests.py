@@ -76,7 +76,7 @@ class SignOutPageTests(TestCase, ViewTesterMixin):
     @classmethod
     def setUpClass(cls):
         ViewTesterMixin.setupViewTester(
-            'sign_out',
+            '/sign_out',
             sign_out,
             "",  # a redirect will return no html
             status_code=302,
@@ -85,7 +85,7 @@ class SignOutPageTests(TestCase, ViewTesterMixin):
         )
 
     def setUp(self):
-        #  sign_out clears the session, so this resets it
+        # sign_out clears the session, so this resets it
         self.request.session = {"user": "dummy"}
 
 
@@ -178,7 +178,7 @@ class FormTests(TestCase, FormTesterMixin):
         ]
 
         for invalid_data in invalid_data_list:
-            self.assertFormError(
+            self.assert_form_error(
                 CardForm,
                 invalid_data['error'][0],
                 invalid_data['error'][1],

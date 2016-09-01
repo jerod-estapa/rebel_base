@@ -186,6 +186,7 @@ class FormTests(TestCase, FormTesterMixin):
                 invalid_data["data"]
             )
 
+
 class RegisterPageTests(TestCase, ViewTesterMixin):
 
     @classmethod

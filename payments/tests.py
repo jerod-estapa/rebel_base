@@ -12,6 +12,7 @@ import django_ecomm.settings as settings
 from payments.models import User
 from .views import sign_in, sign_out, soon, register
 from pprint import pformat
+import mock
 
 
 class UserModelTest(TestCase):
@@ -211,3 +212,17 @@ class RegisterPageTests(TestCase, ViewTesterMixin):
     def setUp(self):
         request_factory = RequestFactory()
         self.request = request_factory.get(self.url)
+
+    def test_invalid_form_returns_registration_page(self):
+
+        with mock.patch('payments.forms.UserForm.is_valid') as user_mock:
+
+            user_mock.return_value = False
+
+            self.request.method = 'POST'
+            self.request.POST = None
+            resp = register(self.request)
+            self.assertEquals(resp.content, self.expected_html)
+
+            # ensures is_valid function was called
+            self.assertEquals(user_mock.call_count, 1)

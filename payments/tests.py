@@ -8,6 +8,7 @@ from django import forms
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import resolve
 from django.shortcuts import render_to_response
+from django.db import IntegrityError
 import django_ecomm.settings as settings
 from payments.models import User
 from .views import sign_in, sign_out, soon, register
@@ -18,15 +19,31 @@ import mock
 class UserModelTest(TestCase):
 
     @classmethod
-    def setUpClass(cls):
+    def setUpTestData(cls):
         cls.test_user = User(email="j@j.com", name='test_user')
         cls.test_user.save()
 
     def test_user_to_string_print_email(self):
-        self.assertEquals(str(self.test_user), "j@j.com")
+        self.assertEqual(str(self.test_user), "j@j.com")
 
     def test_get_by_id(self):
-        self.assertEquals(User.get_by_id(1), self.test_user)
+        self.assertEqual(User.get_by_id(1), self.test_user)
+
+    def test_create_user_function_stores_in_database(self):
+        user = User.create("test", "test@t.com", "tt", "1234", "22")
+        self.assertEqual(User.objects.get(email="test@t.com"), user)
+
+    def test_create_user_already_exists_throws_IntegrityError(self):
+        from django.db import IntegrityError
+        self.assertRaises(
+            IntegrityError,
+            User.create,
+            "test user",
+            "j@j.com",
+            "jj",
+            "1234",
+            89
+        )
 
 
 class ViewTesterMixin(object):
@@ -43,21 +60,22 @@ class ViewTesterMixin(object):
 
     def test_resolves_to_correct_view(self):
         test_view = resolve(self.url)
-        self.assertEquals(test_view.func, self.view_func)
+        self.assertEqual(test_view.func, self.view_func)
 
     def test_returns_appropriate_response_code(self):
         resp = self.view_func(self.request)
-        self.assertEquals(resp.status_code, self.status_code)
+        self.assertEqual(resp.status_code, self.status_code)
 
     def test_returns_correct_html(self):
         resp = self.view_func(self.request)
-        self.assertEquals(resp.content, self.expected_html)
+        self.assertEqual(resp.content, self.expected_html)
 
 
 class SignInPageTests(TestCase, ViewTesterMixin):
 
     @classmethod
     def setUpClass(cls):
+        super(SignInPageTests, cls).setUpClass()
         html = render_to_response(
             'sign_in.html',
             {
@@ -77,6 +95,7 @@ class SignOutPageTests(TestCase, ViewTesterMixin):
 
     @classmethod
     def setUpClass(cls):
+        super(SignOutPageTests, cls).setUpClass()
         ViewTesterMixin.setupViewTester(
             '/sign_out',
             sign_out,
@@ -93,13 +112,13 @@ class SignOutPageTests(TestCase, ViewTesterMixin):
 
 class FormTesterMixin():
 
-    def assert_form_error(self, form_cls, expected_error_name, expected_error_msg, data):
+    def should_have_form_error(self, form_cls, expected_error_name, expected_error_msg, data):
 
         test_form = form_cls(data=data)
         # if we get an error, the form should not be valid
         self.assertFalse(test_form.is_valid())
 
-        self.assertEquals(
+        self.assertEqual(
             test_form.errors[expected_error_name],
             expected_error_msg,
             msg="Expected {} : Actual {} : using data {}".format(
@@ -120,7 +139,7 @@ class FormTests(TestCase, FormTesterMixin):
         ]
 
         for invalid_data in invalid_data_list:
-            self.assert_form_error(SignInForm,
+            self.should_have_form_error(SignInForm,
                                    invalid_data['error'][0],
                                    invalid_data['error'][1],
                                    invalid_data["data"])
@@ -180,7 +199,7 @@ class FormTests(TestCase, FormTesterMixin):
         ]
 
         for invalid_data in invalid_data_list:
-            self.assert_form_error(
+            self.should_have_form_error(
                 CardForm,
                 invalid_data['error'][0],
                 invalid_data['error'][1],
@@ -192,6 +211,7 @@ class RegisterPageTests(TestCase, ViewTesterMixin):
 
     @classmethod
     def setUpClass(cls):
+        super(RegisterPageTests, cls).setUpClass()
         html = render_to_response(
             'register.html',
             {
@@ -227,34 +247,39 @@ class RegisterPageTests(TestCase, ViewTesterMixin):
             # ensures is_valid function was called
             self.assertEquals(user_mock.call_count, 1)
 
-    def test_registering_new_user_returns_successfully(self):
+    @mock.patch('stripe.Customer.create')
+    @mock.patch.object(User, 'create')
+    def test_registering_new_user_returns_successfully(self, create_mock, stripe_mock):
 
         self.request.session = {}
         self.request.method = 'POST'
         self.request.POST = {
             'email': 'python@rocks.com',
             'name': 'pyRock',
-            'stripe_token': '4242424242424242',
+            'stripe_token': '...',
             'last_4_digits': '4242',
             'password': 'bad_password',
             'ver_password': 'bad_password',
         }
 
-        with mock.patch('stripe.Customer') as stripe_mock:
+        # Gets the return values of the mocks, for the checks later
+        new_user = create_mock.return_value
+        new_cust = stripe_mock.return_value
 
-            config = {'create.return_value': mock.Mock()}
-            stripe_mock.configure_mock(**config)
+        resp = register(self.request)
 
-            resp = register(self.request)
-            self.assertEquals(resp.content, "")
-            self.assertEquals(resp.status_code, 302)
-            self.assertEquals(self.request.session['user'], 1)
+        self.assertEqual(resp.content, "")
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(self.request.session['user'], new_user.pk)
 
-            # Verify that the user was actually stored in the database
-            # If the user is not there, this will throw an error
-            User.objects.get(email='python@rocks.com')
+        # Verifies the user was actually stored in the database.
+        create_mock.assert_called_with(
+            'pyRock', 'python@rocks.com', 'bad_password', '4242', new_cust.id
+        )
 
-    def test_registering_user_twice_cause_error_msg(self):
+    # @mock.patch('payments.views.UserForm', get_MockUserForm)
+    # @mock.patch('payments.models.User.save', side_effect=IntegrityError)
+    def test_registering_user_twice_cause_error_msg(self, save_mock):
 
         # Creates a user with the same email so we get an integrity error
         user = User(name='pyRock', email='python@rocks.com')

@@ -5,7 +5,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 
 
 class PaymentForm(forms.Form):
-    def add_error(self, message):
+    def addError(self, message):
         self._errors[NON_FIELD_ERRORS] = self.error_class([message])
 
 

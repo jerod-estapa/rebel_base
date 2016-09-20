@@ -75,21 +75,17 @@ def register(request):
             #     currency="usd",
             # )
 
-            user = User(
-                name=form.cleaned_data['name'],
-                email=form.cleaned_data['email'],
-                last_4_digits=form.cleaned_data['last_4_digits'],
-                stripe_id=customer.id,
-            )
-
-            # Ensure encrypted password
-            user.set_password(form.cleaned_data['password'])
-
+            cd = form.cleaned_data
             try:
-                user.save()
+                user = User.create(
+                    cd['name'],
+                    cd['email'],
+                    cd['password'],
+                    cd['last_4_digits'],
+                    customer.id
+                )
             except IntegrityError:
-                form.add_error(user.email + ' is already a member.')
-                user = None
+                form.add_error(cd['email'] + ' is already a member.')
             else:
                 request.session['user'] = user.pk
                 return HttpResponseRedirect('/')

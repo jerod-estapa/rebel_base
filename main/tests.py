@@ -22,6 +22,7 @@ class MainPageTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        super(MainPageTests, cls).setUpClass()
         request_factory = RequestFactory()
         cls.request = request_factory.get('/')
         cls.request.session = {}
@@ -38,7 +39,7 @@ class MainPageTests(TestCase):
     # Verifies that index view returns HTML
     def test_returns_appropriate_html_code(self):
         resp = index(self.request)
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
 
     #####################################
     #### Testing Templates and Views ####
@@ -47,7 +48,7 @@ class MainPageTests(TestCase):
     # Verifies returned template content against expected content
     def test_returns_exact_html(self):
         resp = index(self.request)
-        self.assertEquals(
+        self.assertEqual(
             resp.content,
             render_to_response("index.html").content
         )

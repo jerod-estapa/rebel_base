@@ -31,12 +31,12 @@ class UserForm(CardForm):
     email = forms.EmailField(required=True)
     password = forms.CharField(
         required=True,
-        label=('Password'),
+        label='Password',
         widget=forms.PasswordInput(render_value=False)
     )
     ver_password = forms.CharField(
         required=True,
-        label=('Verify Password'),
+        label='Verify Password',
         widget=forms.PasswordInput(render_value=False)
     )
 

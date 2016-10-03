@@ -7,6 +7,7 @@ from payments.models import User
 import django_ecomm.settings as settings
 import stripe
 import datetime
+import socket
 
 stripe.api_key = settings.STRIPE_SECRET
 
@@ -19,7 +20,7 @@ def soon():
 def sign_in(request):
     user = None
     if request.method == 'POST':
-        form = SigninForm(request.POST)
+        form = SignInForm(request.POST)
         if form.is_valid():
             results = User.objects.filter(email=form.cleaned_data['email'])
             if len(results) == 1:
@@ -33,7 +34,7 @@ def sign_in(request):
     else:
         form = SignInForm()
 
-    print((form.non_field_errors()))
+    print(form.non_field_errors())
 
     return render_to_response(
         'sign_in.html',
@@ -80,8 +81,12 @@ def register(request):
                     cd['email'],
                     cd['password'],
                     cd['last_4_digits'],
-                    customer.id
+                    stripe_id=''
                 )
+
+                if customer:
+                    user.stripe_id = customer.id
+                    user.save()
             except IntegrityError:
                 form.addError(cd['email'] + ' is already a member')
                 user = None
@@ -148,7 +153,10 @@ class Customer(object):
 
     @classmethod
     def create(cls, billing_method="subscription", **kwargs):
-        if billing_method == "subscription":
-            return stripe.Customer.create(**kwargs)
-        elif billing_method == "one_time":
-            return stripe.Charge.create(**kwargs)
+        try:
+            if billing_method == "subscription":
+                return stripe.Customer.create(**kwargs)
+            elif billing_method == "one_time":
+                return stripe.Charge.create(**kwargs)
+        except socket.error:
+            return None

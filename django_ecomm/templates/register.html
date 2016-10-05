@@ -28,7 +28,7 @@
       {% for field in form.visible_fields %}
       {% include "field.html" %}
       {% endfor %}
-      <div id="change-card" class="clearfix"{% if not form.last_4_digits.value %} style="display: none"{% endif %}>
+      <div id="change-card" class="clearfix" {% if not form.last_4_digits.value %} style="display: none"{% endif %}>
         Card
         <div class="input">
           Using card ending with {{ form.last_4_digits.value }}

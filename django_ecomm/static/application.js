@@ -17,11 +17,11 @@ $(function() {
           $("#last_4_digits").val(response.card.last4);
           $("#stripe_token").val(response.id);
           form.submit();
-        } else {
-          $("#stripe-error-message").text(response.error.message);
-          $("#credit-card-errors").show();
-          $("#user_submit").attr("disabled", false);
-        }
+        // } else {
+          // $("#stripe-error-message").text(response.error.message);
+          // $("#credit-card-errors").show();
+          // $("#user_submit").attr("disabled", false);
+        // }
       });
 
       return false;

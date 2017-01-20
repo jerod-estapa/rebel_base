@@ -4,7 +4,7 @@
 
 		{% load static %}
 
-		{% load marketing %}
+		{% load main_marketing %}
 
 		<center>
 		<section id="myCarousel" class="carousel slide" data-ride="carousel" style="max-width: 960px;">
@@ -17,26 +17,40 @@
 			<div class="carousel-inner">
 				<figure class="item active">
 					<img src="{% static 'img/darth.jpg' %}" alt="Join the Dark Side" style="max-height: 540px;">
-					<figcaption class="carousel-caption">
+					<figcaption class="carousel-caption visible-lg-block" id="darth_caption">
 						<h1>Join the Dark Side</h1>
 						<p>Or, the Light Side. Doesn't matter. If you're into Star Wars, this is the place for you.</p>
 						<p><a class="btn btn-lg btn-primary" href="{% url 'register' %}" role="button">Sign up today</a></p>
 					</figcaption>
+					<figcaption class="carousel-caption hidden-lg">
+						<h3>Join the Dark Side</h3>
+						<p>Or, the Light Side. Doesn't matter. If you're into Star Wars, this is the place for you.</p>
+						<p><a class="btn btn-sm btn-primary" href="{% url 'register' %}" role="button">Sign up today</a></p>
+					</figcaption>
 				</figure>
 				<figure class="item">
 					<img src="{% static 'img/star-wars-battle.jpg' %}" alt="Wage War" style="max-height: 540px;">
-					<figcaption class="carousel-caption">
+					<figcaption class="carousel-caption visible-lg-block">
 						<h1>Wage War</h1>
 						<p>Daily chats, weekly gaming sessions, monthly real-life battle re-enactments.</p>
 						<p><a class="btn btn-lg btn-primary" href="#" role="button">I'm ready to fight</a></p>
 					</figcaption>
+					<figcaption class="carousel-caption hidden-lg">
+						<h1>Wage War</h1>
+						<p>Daily chats, weekly gaming sessions, monthly real-life battle re-enactments.</p>
+						<p><a class="btn btn-sm btn-primary" href="#" role="button">I'm ready to fight</a></p>
+					</figcaption>
 				</figure>
 				<figure class="item">
 					<img src="{% static 'img/star-wars-cast.jpg' %}" alt="Meet People" style="max-height: 540px;">
-					<figcaption class="carousel-caption">
+					<figcaption class="carousel-caption visible-lg-block">
 						<h1>Meet Fellow Star Wars Fans</h1>
 						<p>Join forces with fellow padawans and Jedi near you.</p>
 						<p><a class="btn btn-lg btn-primary" href="#" role="button">Check the Members Map</a></p>
+					</figcaption><figcaption class="carousel-caption hidden-lg">
+						<h2>Meet Fellow Star Wars Fans</h2>
+						<p>Join forces with fellow padawans and Jedi near you.</p>
+						<p><a class="btn btn-sm btn-primary" href="#" role="button">Check the Members Map</a></p>
 					</figcaption>
 				</figure>
 			</div>
@@ -50,9 +64,9 @@
 		<section class="container marketing">
 			<!-- Three sections of text below the carousel -->
 			<div class="row center-text">
-				{% circle_header_item img_name='yoda.jpg' heading='Hone Your Jedi Skills' caption='All members have access to our unique training and achievements ladders. Progress through the levels and show everyone who the top Jedi Master is!' %}
-				{% circle_header_item img_name='clone_army.jpg' heading='Forge Your Guild' caption="Engage in meaningful conversation or bloodthristy battle! If it's Star Wars, you'll find it here!" %}
-				{% circle_header_item img_name='yoda.jpg' heading='Find Love' caption='Find your Princess Leia or Han Solo and explore the stars together.' %}
+				{% marketing__circle_item img_name='yoda.jpg' heading='Hone Your Jedi Skills' caption='All members have access to our unique training and achievements ladders. Progress through the levels and show everyone who the top Jedi Master is!' %}
+				{% marketing__circle_item img_name='clone_army.jpg' heading='Forge Your Guild' caption="Engage in meaningful conversation or bloodthristy battle! If it's Star Wars, you'll find it here!" %}
+				{% marketing__circle_item img_name='leia.jpg' heading='Find Love' caption='Find your Princess Leia or Han Solo and explore the stars together.' %}
 {#				<div class="col-lg-4">#}
 {#					<img class="img-circle" src="{% static 'img/yoda.jpg' %}" width=140 height=140 alt="Generic placeholder image">#}
 {#					<h2>Hone Your Jedi Skills</h2>#}

@@ -17,7 +17,7 @@ body {
   background-color: #eee;
 }
 
-h1, h2, .nav li, .navbar-brand {
+h1, h2, h3, .nav li, .navbar-brand {
   font-family: 'starjedi', sans-serif;
 }
 

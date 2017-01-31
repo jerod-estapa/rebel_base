@@ -6,6 +6,7 @@ from django.utils import timezone
 class User(AbstractBaseUser):
     name = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
+    rank = models.CharField(max_length=50, default="Padawan")
     # password field defined in base class
     last_4_digits = models.CharField(max_length=4, blank=True, null=True)
     stripe_id = models.CharField(max_length=255)

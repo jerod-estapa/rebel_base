@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response
+from django.views.generic import TemplateView
 from payments.models import User
 # from main.templatetags.main_marketing import marketing__circle_item
 
@@ -54,3 +55,7 @@ def index(request):
             'main/user.html',
             {'marketing_items': market_items, 'user': User.get_by_id(uid)}
         )
+
+
+class AboutPageView(TemplateView):
+    template_name = 'main/about.html'

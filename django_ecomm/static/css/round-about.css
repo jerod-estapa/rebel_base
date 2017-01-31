@@ -1,5 +1,6 @@
 body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    background-color: #eee;
+    /* padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
 .img-center {
@@ -8,4 +9,8 @@ body {
 
 footer {
     margin: 50px 0;
+}
+
+h1, h2, h3, .nav li, .navbar-brand {
+  font-family: 'starjedi', sans-serif;
 }

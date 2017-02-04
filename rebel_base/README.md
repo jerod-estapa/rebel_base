@@ -1,2 +1,2 @@
-# django_ecomm_stripe
-Basic django ecommerce with stripe (starter project)
+# Rebel Base
+Star Wars-themed practice project using Django. 

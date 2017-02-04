@@ -1,0 +1,12 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[packages]
+django = "1.8.2"
+stripe = "1.38.0"
+requests = "2.13.0"
+django-embed-video = "0.11"
+mock = "1.0.1"
+psycopg2 = "2.5.3"
+django-zappa = "0.13.1"

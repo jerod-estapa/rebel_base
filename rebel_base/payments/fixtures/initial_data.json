@@ -1,0 +1,32 @@
+[
+  {
+    "fields": {
+      "rank": "Padawan",
+      "name": "Jerod",
+      "created_at": "2017-01-30T04:21:28.898Z",
+      "updated_at": "2017-01-30T04:21:28.898Z",
+      "last_login": null,
+      "password": "pbkdf2_sha256$20000$LpmwFJllQne8$M/PN8NYox/eIosYfZEMM5o4FOlhdhZFtPks013cVw30=",
+      "stripe_id": "",
+      "email": "abc@123.com",
+      "last_4_digits": "None"
+    },
+    "model": "payments.user",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "rank": "Jedi Knight",
+      "name": "jessica",
+      "created_at": "2017-01-30T04:24:25.101Z",
+      "updated_at": "2017-01-30T04:24:25.101Z",
+      "last_login": null,
+      "password": "pbkdf2_sha256$20000$2zOT5eUbkPdz$IZ8AZjoQCZPhNb75/WTgQzT72HrdtjdPEtiSMpTooIE=",
+      "stripe_id": "",
+      "email": "jess@rebelbase.com",
+      "last_4_digits": "None"
+    },
+    "model": "payments.user",
+    "pk": 2
+  }
+]

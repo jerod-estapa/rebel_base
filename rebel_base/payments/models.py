@@ -12,6 +12,7 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     rank = models.CharField(max_length=50, default="Padawan")
+    badges = models.ManyToManyField('main.Badge')
 
     USERNAME_FIELD = 'email'
 

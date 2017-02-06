@@ -67,3 +67,15 @@ h1, h2, h3, .nav li, .navbar-brand {
   margin-right: 0;
   margin-top: -20px;
 }
+
+.full-image {
+  overflow: hidden;
+}
+
+.full-image img {
+  position: relative;
+  display: block;
+  margin: auto;
+  min-width: 100%;
+  min-height: 100px;
+}

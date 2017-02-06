@@ -1,7 +1,8 @@
 from django.shortcuts import render_to_response, RequestContext
 from django.views.generic import TemplateView
 from payments.models import User
-from .models import MarketingItem, StatusReport
+from .models import MarketingItem, StatusReport, Announcement
+from datetime import date, timedelta
 # from main.templatetags.main_marketing import marketing__circle_item
 
 
@@ -46,9 +47,9 @@ market_items = [
 
 def index(request):
     uid = request.session.get('user')
-    market_items = MarketingItem.objects.all()
     if uid is None:
         # main landing page
+        market_items = MarketingItem.objects.all()
         return render_to_response(
             'main/index.html',
             {'marketing_items': market_items}
@@ -56,9 +57,17 @@ def index(request):
     else:
         # membership page
         status = StatusReport.objects.all().order_by('-when')[:20]
+        announce_date = date.today() - timedelta(days=30)
+        announce = (Announcement.objects.filter(
+         when__gt=announce_date).order_by('-when')
+                    )
         return render_to_response(
             'main/user.html',
-            {'user': User.get_by_id(uid), 'reports': status},
+            {
+                'user': User.get_by_id(uid),
+                'reports': status,
+                'announce': announce
+            },
             context_instance=RequestContext(request),
         )
 

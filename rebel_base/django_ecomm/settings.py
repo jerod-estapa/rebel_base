@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'contact',
     'payments',
+    'embed_video',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

@@ -61,10 +61,15 @@ def index(request):
         announce = (Announcement.objects.filter(
          when__gt=announce_date).order_by('-when')
                     )
+
+        usr = User.get_by_id(uid)
+        badges = usr.badges.all()
+
         return render_to_response(
             'main/user.html',
             {
-                'user': User.get_by_id(uid),
+                'user': usr,
+                'badges': badges,
                 'reports': status,
                 'announce': announce
             },

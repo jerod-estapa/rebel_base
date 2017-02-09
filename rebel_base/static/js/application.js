@@ -1,6 +1,6 @@
 $(function() {
 
-  $("#user_form").submit(function() {
+    $("#user_form").submit(function() {
       if (!$("#credit-card").is(":visible")) {
       } else {
           var form = this;
@@ -34,13 +34,27 @@ $(function() {
 
     return true
 
-  });
+    });
 
-  $("#change-card a").click(function() {
-    $("#change-card").hide();
-    $("#credit-card").show();
-    $("#credit_card_number").focus();
-    return false;
-  });
+    $("#change-card a").click(function() {
+        $("#change-card").hide();
+        $("#credit-card").show();
+        $("#credit_card_number").focus();
+        return false;
+    });
+
+    //show status
+    $("#show-achieve").click(function() {
+        a = $("#achievements");
+        l = $("#show-achieve");
+        if (a.hasClass("hide")) {
+            a.hide().removeClass('hide').slideDown('slow');
+            l.html("Hide Achievements");
+        } else {
+            a.addClass("hide");
+            l.html("Show Achievements");
+        }
+        return false;
+    });
 
 });

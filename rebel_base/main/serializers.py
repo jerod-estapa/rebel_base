@@ -1,20 +1,22 @@
 from rest_framework import serializers
 from .models import StatusReport
+from payments.models import User
 
 
-class StatusReportSerializer(serializers.Serializer):
+class RelatedUserField(serializers.RelatedField):
 
-    id = serializers.ReadOnlyField()
-    user = serializers.StringRelatedField()
-    when = serializers.DateTimeField()
-    status = serializers.CharField(max_length=200)
+    read_only = False
 
-    def create(self, validated_data):
-        return StatusReport(**validated_data)
+    def to_representation(self, value):
+        return value.email
 
-    def update(self, instance, validated_data):
-        instance.user = validated_data.get('user', instance.user)
-        instance.when = validated_data.get('when', instance.when)
-        instance.status = validated_data.get('status', instance.status)
-        instance.save()
-        return instance
+    def to_internal_value(self, data):
+        return User.objects.get(email=data)
+
+
+class StatusReportSerializer(serializers.ModelSerializer):
+    user = RelatedUserField(queryset=User.objects.all())
+
+    class Meta:
+        model = StatusReport
+        fields = ('id', 'user', 'when', 'status')

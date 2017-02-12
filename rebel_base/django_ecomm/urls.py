@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^contact/', 'contact.views.contact', name='contact'),
     url(r'^about/$', AboutPageView.as_view(), name='about'),
     url(r'^report/$', 'main.views.report', name="report"),
+    url(r'^api/v1/', include('main.urls')),
 
     # user registration/authentication
     url(r'^sign_in$', views.sign_in, name='sign_in'),

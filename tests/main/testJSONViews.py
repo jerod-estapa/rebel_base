@@ -1,23 +1,37 @@
 from django.test import TestCase
-from main.json_views import StatusCollection
-from main.models import StatusReport
-from main.serializers import StatusReportSerializer
-
-
-class DummyRequest(object):
-
-    def __init__(self, method):
-        self.method = method
-        self.encoding = 'utf8'
-        self.user = "root"
-        self.QUERY_PARAMS = {}
-        self.META = {}
+from rest_framework import status
+from rest_framework.test import APIRequestFactory, force_authenticate
+from payments.model import User
 
 
 class JsonViewTests(TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        super.setUpClass()
+        cls.factory = APIRequestFactory()
+        
+    @classmethod
+    def setUpTestCase(cls):
+        cls.test_user = User(id=2222, email="test@user.com")
 
+    def get_request(self, method='GET', authed=True):
+        request_method = getattr(self.factory, method.lower())
+        request = request_method("")
+        if authed:
+            force_authenticate(request, self.test_user)
+            
+        return request
+    
     def test_get_collection(self):
         status = StatusReport.objects.all()
         expected_json = StatusReportSerializer(status, many=True).data
-        response = StatusCollection.as_view()(DummyRequest('GET'))
+        
+        response = StatusCollection.as_view()(self.get_request())
         self.assertEqual(expected_json, response.data)
+        
+    def test_collection_requires_logged_in_user(self):
+        anon_request = self.get_request(method='GET', authed=False)
+        response = StatusCollection.as_view()(anon_request)
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

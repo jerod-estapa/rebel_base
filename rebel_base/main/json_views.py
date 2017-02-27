@@ -9,6 +9,7 @@ class StatusCollection(mixins.ListModelMixin,
     
     queryset = StatusReport.objects.all()
     serializer_class = StatusReportSerializer
+    permission_classes = (permissions.IsAuthenticated, )
     
     def get(self, request):
         return self.list(request)
@@ -21,6 +22,7 @@ class StatusMember(generics.RetrieveUpdateDestroyAPIView):
     
     queryset = StatusReport.objects.all()
     serializer_class = StatusReportSerializer
+    permission_classes = (permissions.IsAuthenticated, )
     
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

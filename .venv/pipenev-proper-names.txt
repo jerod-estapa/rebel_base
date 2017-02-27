@@ -1,8 +1,0 @@
-django
-stripe
-requests
-django-embed-video
-mock
-psycopg2
-zappa
-django-zappa

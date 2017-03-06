@@ -44,10 +44,11 @@ class StatusReportSerializerTests(TestCase):
         stream = BytesIO(json)
         data = JSONParser().parse(stream)
 
-        serializer = StatusReportSerializer(self.new_status, data=data),
+        serializer = StatusReportSerializer(self.new_status, data=data)
         self.assertTrue(serializer.is_valid())
 
         status = serializer.save()
+        self.assertEqual(self.new_status, status)
         self.assertEqual(self.new_status.id, status.id)
         self.assertEqual(self.new_status.status, status.status)
         self.assertEqual(self.new_status.when, status.when)
@@ -58,7 +59,7 @@ class StatusReportSerializerTests(TestCase):
         stream = BytesIO(json)
         data = JSONParser().parse(stream)
 
-        serializer = StatusReportSerializer(self.new_status, data=data),
+        serializer = StatusReportSerializer(self.new_status, data=data)
         self.assertTrue(serializer.is_valid())
 
         status = serializer.save()
